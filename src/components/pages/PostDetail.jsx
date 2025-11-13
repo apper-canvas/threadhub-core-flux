@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { formatNumber } from "@/utils/formatNumber";
@@ -20,11 +20,11 @@ export default function PostDetail() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const fetchPost = async () => {
+const fetchPost = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
-// Validate postId before making API call
+      // Validate postId before making API call
       if (!postId || postId === '' || !/^\d+$/.test(String(postId))) {
         throw new Error('Invalid post ID in URL. Please check the link and try again.')
       }
@@ -38,7 +38,7 @@ export default function PostDetail() {
     } finally {
       setLoading(false)
     }
-  };
+  }, [postId]);
   const handleVote = async (_, voteType) => {
     if (!post) return;
     
@@ -92,9 +92,9 @@ export default function PostDetail() {
     }
   };
 
-  useEffect(() => {
+useEffect(() => {
     fetchPost();
-  }, [postId]);
+  }, [fetchPost]);
 
   if (loading) {
     return <Loading count={1} />;
