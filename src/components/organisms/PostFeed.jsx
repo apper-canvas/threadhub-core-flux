@@ -45,15 +45,15 @@ return (
               >
                 <ApperIcon name={option.icon} className="h-4 w-4" />
                 <span>{option.label}</span>
-              </Button>
+</Button>
             ))}
-</div>
+          </div>
+        </div>
       )}
 
       {/* Posts */}
       <div className="space-y-4">
-        {posts.map((post) => (
-          <div key={post.id} className="relative">
+{posts.map((post) => (
           <div key={post.id} className="relative">
             {post.isPinned && (
               <div className="absolute top-2 left-2 z-10">

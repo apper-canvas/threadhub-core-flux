@@ -159,48 +159,32 @@ useEffect(() => {
             </div>
             
             {/* Details */}
-            <div className="flex-1 mt-4">
+<div className="flex-1 mt-4">
               <div className="flex items-center space-x-3 mb-2">
-<div className="flex items-center space-x-3 mb-2">
-                  <div className="w-16 h-16 rounded-full bg-white border-4 border-white shadow-lg overflow-hidden flex-shrink-0">
-                    {community.icon ? (
-                      <img 
-                        src={community.icon} 
-                        alt={community.displayName}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                        <ApperIcon name="Hash" className="h-8 w-8 text-white" />
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    <h1 className="text-3xl font-bold text-gray-900">
-                      r/{community.displayName}
-                    </h1>
-                    <div className="flex items-center space-x-4 text-sm text-gray-600">
-                      <span className="flex items-center space-x-1">
-                        <ApperIcon name="Users" className="h-4 w-4" />
-                        <span>{formatNumber(community.memberCount)} members</span>
-                      </span>
-                      <span className="flex items-center space-x-1">
-                        <ApperIcon name="Circle" className="h-3 w-3 text-green-500 fill-current" />
-                        <span>{formatNumber(Math.floor(community.memberCount * 0.05))} online</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  r/{community.displayName}
+                </h1>
                 <Badge variant="default">
                   {formatNumber(community.memberCount)} members
                 </Badge>
               </div>
               
-<p className="text-gray-600 mb-6 max-w-3xl leading-relaxed">
+<div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
+                <span className="flex items-center space-x-1">
+                  <ApperIcon name="Users" className="h-4 w-4" />
+                  <span>{formatNumber(community.memberCount)} members</span>
+                </span>
+                <span className="flex items-center space-x-1">
+                  <ApperIcon name="Circle" className="h-3 w-3 text-green-500 fill-current" />
+                  <span>{formatNumber(Math.floor(community.memberCount * 0.05))} online</span>
+                </span>
+              </div>
+              
+              <p className="text-gray-600 mb-6 max-w-3xl leading-relaxed">
                 {community.description}
               </p>
               
-<div className="flex flex-wrap items-center gap-4">
+              <div className="flex flex-wrap items-center gap-4">
                 <Button
                   variant={community.isJoined ? "secondary" : "primary"}
                   onClick={handleJoinLeave}
@@ -304,13 +288,10 @@ useEffect(() => {
               onLoadMore={loadMore}
               loading={postsLoading}
               hideControls={true}
-            />
-          )}
 />
           )}
         </div>
 
-        {/* Enhanced Sidebar */
 {/* Enhanced Sidebar */}
         <div className="w-80 flex-shrink-0 hidden lg:block">
           <div className="sticky top-20 space-y-4">
@@ -452,13 +433,12 @@ useEffect(() => {
                   <p>No related communities.</p>
                 </div>
               )}
-            </Card>
-</div>
+</Card>
+          </div>
         </div>
       </div>
     </div>
   );
-};
 };
 
 export default Community;
