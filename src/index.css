@@ -1,0 +1,102 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "react-toastify/dist/ReactToastify.css";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  line-height: 1.6;
+  color: #1a202c;
+  background: #F8F9FA;
+}
+
+/* Toast Customization */
+.Toastify__toast-container {
+  font-size: 14px;
+  font-family: "Inter", sans-serif;
+}
+
+.Toastify__toast {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-weight: 500;
+}
+
+.Toastify__toast--success {
+  background: #46D160;
+}
+
+.Toastify__toast--error {
+  background: #EA0027;
+}
+
+.Toastify__toast--info {
+  background: #0079D3;
+}
+
+.Toastify__toast--warning {
+  background: #FFB000;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Vote Arrow Animations */
+.vote-arrow {
+  transition: all 0.15s ease-out;
+}
+
+.vote-arrow:hover {
+  transform: scale(1.05);
+}
+
+.vote-arrow:active {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Smooth Transitions */
+.transition-smooth {
+  transition: all 0.2s ease-out;
+}
+
+/* Text Selection */
+::selection {
+  background: rgba(255, 69, 0, 0.2);
+  color: #1a202c;
+}
+
+/* Loading Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.loading-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 0px, #e0e0e0 40px, #f0f0f0 80px);
+  background-size: 200px;
+  animation: shimmer 1.5s infinite linear;
+}

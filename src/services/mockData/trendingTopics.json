@@ -1,0 +1,107 @@
+[
+  {
+    "Id": 1,
+    "name": "AI",
+    "postCount": 15647,
+    "trendingScore": 98.5,
+    "category": "technology"
+  },
+  {
+    "Id": 2,
+    "name": "ClimateChange",
+    "postCount": 8934,
+    "trendingScore": 87.2,
+    "category": "environment"
+  },
+  {
+    "Id": 3,
+    "name": "WebDevelopment",
+    "postCount": 6754,
+    "trendingScore": 76.8,
+    "category": "technology"
+  },
+  {
+    "Id": 4,
+    "name": "Photography",
+    "postCount": 12456,
+    "trendingScore": 74.3,
+    "category": "creative"
+  },
+  {
+    "Id": 5,
+    "name": "Fitness",
+    "postCount": 9821,
+    "trendingScore": 71.9,
+    "category": "health"
+  },
+  {
+    "Id": 6,
+    "name": "Cryptocurrency",
+    "postCount": 7632,
+    "trendingScore": 69.4,
+    "category": "finance"
+  },
+  {
+    "Id": 7,
+    "name": "Cooking",
+    "postCount": 11234,
+    "trendingScore": 65.7,
+    "category": "lifestyle"
+  },
+  {
+    "Id": 8,
+    "name": "Gaming",
+    "postCount": 18765,
+    "trendingScore": 63.2,
+    "category": "entertainment"
+  },
+  {
+    "Id": 9,
+    "name": "Travel",
+    "postCount": 5432,
+    "trendingScore": 61.8,
+    "category": "lifestyle"
+  },
+  {
+    "Id": 10,
+    "name": "Science",
+    "postCount": 4987,
+    "trendingScore": 59.3,
+    "category": "education"
+  },
+  {
+    "Id": 11,
+    "name": "SpaceExploration",
+    "postCount": 3654,
+    "trendingScore": 56.9,
+    "category": "science"
+  },
+  {
+    "Id": 12,
+    "name": "Sustainability",
+    "postCount": 4321,
+    "trendingScore": 54.6,
+    "category": "environment"
+  },
+  {
+    "Id": 13,
+    "name": "MentalHealth",
+    "postCount": 6789,
+    "trendingScore": 52.1,
+    "category": "health"
+  },
+  {
+    "Id": 14,
+    "name": "RemoteWork",
+    "postCount": 5876,
+    "trendingScore": 49.7,
+    "category": "career"
+  },
+  {
+    "Id": 15,
+    "name": "DIY",
+    "postCount": 7543,
+    "trendingScore": 47.3,
+    "category": "creative"
+  }
+]
