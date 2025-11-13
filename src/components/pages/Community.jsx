@@ -123,89 +123,171 @@ useEffect(() => {
     );
   }
 
+// Apply community-specific CSS custom properties for dynamic theming
+  const communityStyle = {
+    '--community-primary': community.theme?.primaryColor || '#FF4500',
+    '--community-secondary': community.theme?.secondaryColor || '#0079D3',
+    '--community-accent': community.theme?.accentColor || '#FF8717',
+    '--community-bg': community.theme?.backgroundColor || 'rgba(255, 69, 0, 0.05)',
+    '--community-text': community.theme?.textColor || '#1a202c'
+  };
+
   return (
-    <div className="max-w-6xl mx-auto">
-      {/* Community Header */}
-      <Card className="mb-6 overflow-hidden">
-        {/* Banner */}
-{/* Community Banner */}
-        <div className="h-48 bg-gradient-to-r from-primary/20 to-accent/20 relative overflow-hidden">
+    <div className="max-w-6xl mx-auto" style={communityStyle}>
+      {/* Enhanced Community Header with Dynamic Branding */}
+      <Card className="mb-6 overflow-hidden shadow-xl border-0">
+        {/* Dynamic Banner with Gradient Overlays */}
+        <div className="h-56 relative overflow-hidden">
           {community.bannerImage ? (
-            <img 
-              src={community.bannerImage} 
-              alt={`${community.displayName} banner`}
-              className="w-full h-full object-cover"
-            />
+            <>
+              <img 
+                src={community.bannerImage} 
+                alt={`${community.displayName} banner`}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+            </>
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-primary/30 via-accent/20 to-secondary/30" />
+            <div 
+              className="w-full h-full relative"
+              style={{
+                background: `linear-gradient(135deg, ${community.theme?.primaryColor || '#FF4500'}20 0%, ${community.theme?.secondaryColor || '#0079D3'}15 50%, ${community.theme?.accentColor || '#FF8717'}20 100%)`
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-black/20" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+            </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+          
+          {/* Community Category Badge */}
+          <div className="absolute top-4 right-4">
+            <Badge 
+              variant="secondary" 
+              className="bg-white/90 backdrop-blur-sm text-gray-800 shadow-lg"
+            >
+              {community.category || 'General'}
+            </Badge>
+          </div>
         </div>
         
-        {/* Community Info */}
-        <div className="p-6 -mt-16 relative">
-          <div className="flex items-start space-x-4">
-            {/* Community Avatar */}
-            <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center flex-shrink-0 border-4 border-white shadow-lg">
+        {/* Enhanced Community Profile Section */}
+        <div className="p-8 -mt-20 relative">
+          <div className="flex items-start space-x-6">
+            {/* Large Community Avatar with Custom Styling */}
+            <div 
+              className="w-20 h-20 rounded-2xl flex items-center justify-center flex-shrink-0 border-4 border-white shadow-2xl relative overflow-hidden"
+              style={{
+                background: community.theme?.primaryColor 
+                  ? `linear-gradient(135deg, ${community.theme.primaryColor} 0%, ${community.theme.accentColor || community.theme.primaryColor} 100%)`
+                  : 'linear-gradient(135deg, #FF4500 0%, #FF8717 100%)'
+              }}
+            >
               {community.icon ? (
                 <img 
                   src={community.icon} 
                   alt={community.name}
-                  className="w-full h-full rounded-full object-cover"
+                  className="w-full h-full object-cover"
                 />
               ) : (
-                <ApperIcon name="Hash" className="h-8 w-8 text-white" />
+                <ApperIcon name="Hash" className="h-10 w-10 text-white" />
               )}
+              {/* Online Status Indicator */}
+              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-3 border-white flex items-center justify-center">
+                <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+              </div>
             </div>
             
-            {/* Details */}
-<div className="flex-1 mt-4">
-              <div className="flex items-center space-x-3 mb-2">
-                <h1 className="text-3xl font-bold text-gray-900">
-                  r/{community.displayName}
-                </h1>
-                <Badge variant="default">
-                  {formatNumber(community.memberCount)} members
-                </Badge>
+            {/* Enhanced Community Details */}
+            <div className="flex-1 mt-6 space-y-4">
+              {/* Header with Custom Color Accent */}
+              <div className="space-y-3">
+                <div className="flex items-center space-x-4 flex-wrap">
+                  <h1 
+                    className="text-4xl font-bold"
+                    style={{ color: community.theme?.textColor || '#1a202c' }}
+                  >
+                    r/{community.displayName}
+                  </h1>
+                  <Badge 
+                    variant="outline" 
+                    className="text-base px-4 py-1"
+                    style={{ 
+                      borderColor: community.theme?.primaryColor || '#FF4500',
+                      color: community.theme?.primaryColor || '#FF4500'
+                    }}
+                  >
+                    {formatNumber(community.memberCount)} members
+                  </Badge>
+                </div>
+                
+                {/* Community Stats Row */}
+                <div className="flex items-center space-x-6 text-sm text-gray-600">
+                  <span className="flex items-center space-x-2">
+                    <ApperIcon name="Users" className="h-4 w-4" />
+                    <span className="font-medium">{formatNumber(community.memberCount)} members</span>
+                  </span>
+                  <span className="flex items-center space-x-2">
+                    <ApperIcon name="Circle" className="h-3 w-3 text-green-500 fill-current" />
+                    <span className="font-medium">{formatNumber(Math.floor(community.memberCount * 0.05))} online</span>
+                  </span>
+                  <span className="flex items-center space-x-2">
+                    <ApperIcon name="TrendingUp" className="h-4 w-4" />
+                    <span className="font-medium">#{community.rank || Math.floor(Math.random() * 100) + 1} trending</span>
+                  </span>
+                </div>
               </div>
               
-<div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
-                <span className="flex items-center space-x-1">
-                  <ApperIcon name="Users" className="h-4 w-4" />
-                  <span>{formatNumber(community.memberCount)} members</span>
-                </span>
-                <span className="flex items-center space-x-1">
-                  <ApperIcon name="Circle" className="h-3 w-3 text-green-500 fill-current" />
-                  <span>{formatNumber(Math.floor(community.memberCount * 0.05))} online</span>
-                </span>
+              {/* Enhanced Description */}
+              <div className="max-w-4xl">
+                <p className="text-gray-700 text-lg leading-relaxed">
+                  {community.description}
+                </p>
+                {community.longDescription && (
+                  <p className="text-gray-600 mt-2 text-sm">
+                    {community.longDescription}
+                  </p>
+                )}
               </div>
               
-              <p className="text-gray-600 mb-6 max-w-3xl leading-relaxed">
-                {community.description}
-              </p>
-              
-              <div className="flex flex-wrap items-center gap-4">
+              {/* Enhanced Action Buttons */}
+              <div className="flex flex-wrap items-center gap-4 pt-2">
                 <Button
-                  variant={community.isJoined ? "secondary" : "primary"}
+                  variant={community.isJoined ? "outline" : "default"}
                   onClick={handleJoinLeave}
-                  className="px-6"
+                  className="px-8 py-2 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                  style={{
+                    backgroundColor: !community.isJoined ? (community.theme?.primaryColor || '#FF4500') : 'transparent',
+                    borderColor: community.theme?.primaryColor || '#FF4500',
+                    color: community.isJoined ? (community.theme?.primaryColor || '#FF4500') : 'white'
+                  }}
                 >
                   <ApperIcon 
                     name={community.isJoined ? "UserMinus" : "UserPlus"} 
-                    className="h-4 w-4 mr-2" 
+                    className="h-5 w-5 mr-2" 
                   />
-                  {community.isJoined ? "Leave" : "Join"}
+                  {community.isJoined ? "Leave Community" : "Join Community"}
                 </Button>
                 
                 <Button
                   variant="outline"
                   onClick={() => navigate("/submit")}
+                  className="px-6 py-2 font-medium hover:bg-gray-50 transition-all duration-200"
                 >
-                  <ApperIcon name="Plus" className="h-4 w-4 mr-2" />
+                  <ApperIcon name="Plus" className="h-5 w-5 mr-2" />
                   Create Post
                 </Button>
                 
-                <Badge variant="secondary" className="px-3 py-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="px-4 py-2 text-sm"
+                >
+                  <ApperIcon name="Bell" className="h-4 w-4 mr-1" />
+                  Notifications
+                </Button>
+                
+                <Badge variant="secondary" className="px-4 py-2 text-sm">
+                  <ApperIcon name="Calendar" className="h-4 w-4 mr-1" />
                   Created {formatTimeAgo(community.createdAt)}
                 </Badge>
               </div>
@@ -214,47 +296,68 @@ useEffect(() => {
         </div>
       </Card>
 
-      {/* Content */}
-      <div className="flex gap-6">
-        {/* Posts */}
-{/* Main Content */}
-        <div className="flex-1 space-y-4">
-          {/* Sort and Filter Controls */}
-          <Card className="p-4">
-            <div className="space-y-4">
-              {/* Sort Options */}
+      {/* Enhanced Content Layout */}
+      <div className="flex gap-8">
+        {/* Main Content with Community Branding */}
+        <div className="flex-1 space-y-6">
+          {/* Enhanced Sort and Filter Controls */}
+          <Card className="p-6 shadow-md border-l-4" style={{ borderLeftColor: community.theme?.primaryColor || '#FF4500' }}>
+            <div className="space-y-6">
+              {/* Sort Options with Enhanced Styling */}
               <div>
-                <h3 className="text-sm font-medium text-gray-700 mb-2">Sort by</h3>
-                <div className="flex flex-wrap gap-2">
+                <h3 className="text-base font-semibold text-gray-800 mb-3 flex items-center space-x-2">
+                  <ApperIcon name="ArrowUpDown" className="h-5 w-5" style={{ color: community.theme?.primaryColor || '#FF4500' }} />
+                  <span>Sort Posts</span>
+                </h3>
+                <div className="flex flex-wrap gap-3">
                   {sortOptions.map((option) => (
                     <Button
                       key={option.key}
-                      variant={sortBy === option.key ? "primary" : "outline"}
+                      variant={sortBy === option.key ? "default" : "outline"}
                       size="sm"
                       onClick={() => handleSortChange(option.key)}
-                      className="flex items-center space-x-2"
+                      className="flex items-center space-x-2 px-4 py-2 transition-all duration-200 hover:scale-105"
+                      style={sortBy === option.key ? {
+                        backgroundColor: community.theme?.primaryColor || '#FF4500',
+                        borderColor: community.theme?.primaryColor || '#FF4500',
+                        color: 'white'
+                      } : {
+                        borderColor: community.theme?.primaryColor || '#FF4500',
+                        color: community.theme?.primaryColor || '#FF4500'
+                      }}
                     >
                       <ApperIcon name={option.icon} className="h-4 w-4" />
-                      <span>{option.label}</span>
+                      <span className="font-medium">{option.label}</span>
                     </Button>
                   ))}
                 </div>
               </div>
 
-              {/* Post Type Filter */}
+              {/* Post Type Filter with Enhanced Styling */}
               <div>
-                <h3 className="text-sm font-medium text-gray-700 mb-2">Post Type</h3>
-                <div className="flex flex-wrap gap-2">
+                <h3 className="text-base font-semibold text-gray-800 mb-3 flex items-center space-x-2">
+                  <ApperIcon name="Filter" className="h-5 w-5" style={{ color: community.theme?.secondaryColor || '#0079D3' }} />
+                  <span>Content Type</span>
+                </h3>
+                <div className="flex flex-wrap gap-3">
                   {postTypeOptions.map((option) => (
                     <Button
                       key={option.key}
-                      variant={postType === option.key ? "secondary" : "outline"}
+                      variant={postType === option.key ? "default" : "outline"}
                       size="sm"
                       onClick={() => handlePostTypeChange(option.key)}
-                      className="flex items-center space-x-2"
+                      className="flex items-center space-x-2 px-4 py-2 transition-all duration-200 hover:scale-105"
+                      style={postType === option.key ? {
+                        backgroundColor: community.theme?.secondaryColor || '#0079D3',
+                        borderColor: community.theme?.secondaryColor || '#0079D3',
+                        color: 'white'
+                      } : {
+                        borderColor: community.theme?.secondaryColor || '#0079D3',
+                        color: community.theme?.secondaryColor || '#0079D3'
+                      }}
                     >
                       <ApperIcon name={option.icon} className="h-4 w-4" />
-                      <span>{option.label}</span>
+                      <span className="font-medium">{option.label}</span>
                     </Button>
                   ))}
                 </div>
@@ -262,114 +365,155 @@ useEffect(() => {
             </div>
           </Card>
 
-          {/* Posts Feed */}
+          {/* Posts Feed with Enhanced States */}
           {postsLoading && posts.length === 0 ? (
-            <Loading />
+            <div className="space-y-4">
+              <div className="animate-pulse">
+                <div className="h-32 bg-gray-200 rounded-lg mb-4"></div>
+                <div className="h-32 bg-gray-200 rounded-lg mb-4"></div>
+                <div className="h-32 bg-gray-200 rounded-lg"></div>
+              </div>
+            </div>
           ) : postsError && posts.length === 0 ? (
-            <ErrorView
-              title="Failed to load posts"
-              message={postsError}
-              onRetry={refetchPosts}
-            />
+            <Card className="p-8 text-center">
+              <ErrorView
+                title="Failed to load posts"
+                message={postsError}
+                onRetry={refetchPosts}
+              />
+            </Card>
           ) : posts.length === 0 ? (
-            <Empty
-              title={`No posts in r/${community.displayName} yet`}
-              message="Be the first to start a discussion in this community!"
-              actionLabel="Create Post"
-              actionIcon="Plus"
-              onAction={() => navigate("/submit")}
-            />
+            <Card className="p-12 text-center" style={{ backgroundColor: community.theme?.backgroundColor || 'rgba(255, 69, 0, 0.02)' }}>
+              <Empty
+                title={`Welcome to r/${community.displayName}!`}
+                message="This community is just getting started. Be the first to share something interesting!"
+                actionLabel="Create the First Post"
+                actionIcon="Plus"
+                onAction={() => navigate("/submit")}
+              />
+            </Card>
           ) : (
-            <PostFeed
-              posts={posts}
-              onVote={handleVote}
-              onSave={handleSave}
-              hasMore={hasMore}
-              onLoadMore={loadMore}
-              loading={postsLoading}
-              hideControls={true}
-/>
+            <div className="space-y-1">
+              <PostFeed
+                posts={posts}
+                onVote={handleVote}
+                onSave={handleSave}
+                hasMore={hasMore}
+                onLoadMore={loadMore}
+                loading={postsLoading}
+                hideControls={true}
+                communityTheme={community.theme}
+              />
+            </div>
           )}
         </div>
 
-{/* Enhanced Sidebar */}
+        {/* Enhanced Branded Sidebar */}
         <div className="w-80 flex-shrink-0 hidden lg:block">
-          <div className="sticky top-20 space-y-4">
-            {/* About Community */}
-            <Card className="p-4">
-              <h3 className="font-semibold text-gray-900 mb-3 flex items-center space-x-2">
-                <ApperIcon name="Info" className="h-5 w-5 text-primary" />
-                <span>About Community</span>
+          <div className="sticky top-20 space-y-6">
+            {/* About Community with Enhanced Design */}
+            <Card className="p-6 shadow-lg border-l-4" style={{ borderLeftColor: community.theme?.primaryColor || '#FF4500' }}>
+              <h3 className="font-bold text-gray-900 mb-4 text-lg flex items-center space-x-2">
+                <div 
+                  className="w-6 h-6 rounded flex items-center justify-center"
+                  style={{ backgroundColor: community.theme?.primaryColor || '#FF4500' }}
+                >
+                  <ApperIcon name="Info" className="h-4 w-4 text-white" />
+                </div>
+                <span>About r/{community.displayName}</span>
               </h3>
-              <p className="text-gray-600 text-sm leading-relaxed mb-4">
+              <p className="text-gray-700 text-sm leading-relaxed mb-6">
                 {community.description}
               </p>
               
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-500 flex items-center space-x-1">
+              <div className="grid grid-cols-1 gap-4 text-sm">
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                  <span className="text-gray-600 flex items-center space-x-2">
                     <ApperIcon name="Users" className="h-4 w-4" />
-                    <span>Members</span>
+                    <span className="font-medium">Members</span>
                   </span>
-                  <span className="font-medium">{formatNumber(community.memberCount)}</span>
+                  <span className="font-bold text-lg" style={{ color: community.theme?.primaryColor || '#FF4500' }}>
+                    {formatNumber(community.memberCount)}
+                  </span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-500 flex items-center space-x-1">
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                  <span className="text-gray-600 flex items-center space-x-2">
                     <ApperIcon name="Circle" className="h-3 w-3 text-green-500 fill-current" />
-                    <span>Online</span>
+                    <span className="font-medium">Online Now</span>
                   </span>
-                  <span className="font-medium">{formatNumber(Math.floor(community.memberCount * 0.05))}</span>
+                  <span className="font-bold text-lg text-green-600">
+                    {formatNumber(Math.floor(community.memberCount * 0.05))}
+                  </span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-500 flex items-center space-x-1">
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                  <span className="text-gray-600 flex items-center space-x-2">
                     <ApperIcon name="Calendar" className="h-4 w-4" />
-                    <span>Created</span>
+                    <span className="font-medium">Created</span>
                   </span>
-                  <span className="font-medium">{formatTimeAgo(community.createdAt)}</span>
+                  <span className="font-bold">{formatTimeAgo(community.createdAt)}</span>
                 </div>
               </div>
             </Card>
 
-            {/* Community Rules */}
-            <Card className="p-4">
-              <h3 className="font-semibold text-gray-900 mb-3 flex items-center space-x-2">
-                <ApperIcon name="BookOpen" className="h-5 w-5 text-secondary" />
-                <span>Community Rules</span>
+            {/* Enhanced Community Rules */}
+            <Card className="p-6 shadow-lg border-l-4" style={{ borderLeftColor: community.theme?.secondaryColor || '#0079D3' }}>
+              <h3 className="font-bold text-gray-900 mb-4 text-lg flex items-center space-x-2">
+                <div 
+                  className="w-6 h-6 rounded flex items-center justify-center"
+                  style={{ backgroundColor: community.theme?.secondaryColor || '#0079D3' }}
+                >
+                  <ApperIcon name="BookOpen" className="h-4 w-4 text-white" />
+                </div>
+                <span>Community Guidelines</span>
               </h3>
               {community.rules && community.rules.length > 0 ? (
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {community.rules.map((rule, index) => (
-                    <div key={index} className="p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-start space-x-2">
-                        <Badge variant="outline" size="sm" className="mt-0.5 flex-shrink-0">
+                    <div key={index} className="p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border-l-3" style={{ borderLeftColor: community.theme?.secondaryColor || '#0079D3' }}>
+                      <div className="flex items-start space-x-3">
+                        <Badge 
+                          variant="outline" 
+                          size="sm" 
+                          className="mt-1 flex-shrink-0 font-bold"
+                          style={{ 
+                            borderColor: community.theme?.secondaryColor || '#0079D3',
+                            color: community.theme?.secondaryColor || '#0079D3'
+                          }}
+                        >
                           {index + 1}
                         </Badge>
                         <div className="min-w-0">
-                          <h4 className="font-medium text-sm text-gray-900">{rule.title}</h4>
-                          <p className="text-xs text-gray-600 mt-1">{rule.description}</p>
+                          <h4 className="font-semibold text-sm text-gray-900 mb-1">{rule.title}</h4>
+                          <p className="text-xs text-gray-600 leading-relaxed">{rule.description}</p>
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="text-sm text-gray-500 text-center py-4">
-                  <ApperIcon name="BookOpen" className="h-8 w-8 mx-auto mb-2 text-gray-300" />
-                  <p>No community rules yet.</p>
+                <div className="text-center py-8">
+                  <ApperIcon name="BookOpen" className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+                  <p className="text-sm text-gray-500">No community guidelines yet.</p>
+                  <p className="text-xs text-gray-400 mt-1">Check back later for updates!</p>
                 </div>
               )}
             </Card>
 
-            {/* Moderators */}
-            <Card className="p-4">
-              <h3 className="font-semibold text-gray-900 mb-3 flex items-center space-x-2">
-                <ApperIcon name="Shield" className="h-5 w-5 text-primary" />
-                <span>Moderators</span>
+            {/* Enhanced Moderators Section */}
+            <Card className="p-6 shadow-lg border-l-4" style={{ borderLeftColor: community.theme?.accentColor || '#FF8717' }}>
+              <h3 className="font-bold text-gray-900 mb-4 text-lg flex items-center space-x-2">
+                <div 
+                  className="w-6 h-6 rounded flex items-center justify-center"
+                  style={{ backgroundColor: community.theme?.accentColor || '#FF8717' }}
+                >
+                  <ApperIcon name="Shield" className="h-4 w-4 text-white" />
+                </div>
+                <span>Community Team</span>
               </h3>
               {community.moderators && community.moderators.length > 0 ? (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {community.moderators.map((mod) => (
-                    <div key={mod.username} className="flex items-center space-x-3">
+                    <div key={mod.username} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                       <Avatar 
                         src={mod.avatar} 
                         alt={mod.username}
@@ -378,7 +522,8 @@ useEffect(() => {
                       <div className="min-w-0 flex-1">
                         <button
                           onClick={() => navigate(`/u/${mod.username}`)}
-                          className="text-sm font-medium text-gray-900 hover:text-primary transition-colors truncate block"
+                          className="text-sm font-semibold text-gray-900 hover:underline transition-colors truncate block"
+                          style={{ color: community.theme?.accentColor || '#FF8717' }}
                         >
                           u/{mod.username}
                         </button>
@@ -392,48 +537,61 @@ useEffect(() => {
                   ))}
                 </div>
               ) : (
-                <div className="text-sm text-gray-500 text-center py-4">
-                  <ApperIcon name="Shield" className="h-8 w-8 mx-auto mb-2 text-gray-300" />
-                  <p>No moderators listed.</p>
+                <div className="text-center py-8">
+                  <ApperIcon name="Shield" className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+                  <p className="text-sm text-gray-500">Community team info coming soon.</p>
                 </div>
               )}
             </Card>
 
-            {/* Related Communities */}
-            <Card className="p-4">
-              <h3 className="font-semibold text-gray-900 mb-3 flex items-center space-x-2">
-                <ApperIcon name="Link2" className="h-5 w-5 text-accent" />
-                <span>Related Communities</span>
+            {/* Enhanced Related Communities */}
+            <Card className="p-6 shadow-lg">
+              <h3 className="font-bold text-gray-900 mb-4 text-lg flex items-center space-x-2">
+                <div 
+                  className="w-6 h-6 rounded flex items-center justify-center bg-gradient-to-r"
+                  style={{ 
+                    background: `linear-gradient(45deg, ${community.theme?.primaryColor || '#FF4500'}, ${community.theme?.accentColor || '#FF8717'})` 
+                  }}
+                >
+                  <ApperIcon name="Link2" className="h-4 w-4 text-white" />
+                </div>
+                <span>Similar Communities</span>
               </h3>
               {community.relatedCommunities && community.relatedCommunities.length > 0 ? (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {community.relatedCommunities.map((related) => (
                     <button
                       key={related.name}
                       onClick={() => navigate(`/r/${related.name}`)}
-                      className="flex items-center space-x-3 w-full p-2 rounded-lg hover:bg-gray-50 transition-colors text-left"
+                      className="flex items-center space-x-3 w-full p-3 rounded-lg hover:bg-gray-50 transition-all duration-200 hover:shadow-md text-left group"
                     >
-                      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center flex-shrink-0">
-                        <ApperIcon name="Hash" className="h-3 w-3 text-white" />
+                      <div 
+                        className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform"
+                        style={{ 
+                          background: `linear-gradient(135deg, ${community.theme?.primaryColor || '#FF4500'}, ${community.theme?.accentColor || '#FF8717'})` 
+                        }}
+                      >
+                        <ApperIcon name="Hash" className="h-4 w-4 text-white" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-gray-900 truncate">
+                        <p className="text-sm font-semibold text-gray-900 truncate group-hover:text-orange-600 transition-colors">
                           r/{related.displayName}
                         </p>
                         <p className="text-xs text-gray-500">
                           {formatNumber(related.memberCount)} members
                         </p>
                       </div>
+                      <ApperIcon name="ExternalLink" className="h-4 w-4 text-gray-400 group-hover:text-orange-500 transition-colors" />
                     </button>
                   ))}
                 </div>
               ) : (
-                <div className="text-sm text-gray-500 text-center py-4">
-                  <ApperIcon name="Link2" className="h-8 w-8 mx-auto mb-2 text-gray-300" />
-                  <p>No related communities.</p>
+                <div className="text-center py-8">
+                  <ApperIcon name="Link2" className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+                  <p className="text-sm text-gray-500">Discover similar communities soon.</p>
                 </div>
               )}
-</Card>
+            </Card>
           </div>
         </div>
       </div>
