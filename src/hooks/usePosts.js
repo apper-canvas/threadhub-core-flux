@@ -15,7 +15,7 @@ export const usePosts = (filters = {}) => {
       setError("");
       
       const currentPage = resetPage ? 1 : page;
-const response = await postService.getAll({
+      const response = await postService.getAll({
         ...filters,
         page: currentPage,
         limit: 10
@@ -48,7 +48,7 @@ const response = await postService.getAll({
     try {
       // Optimistic update
       setPosts(prev => prev.map(post => {
-if ((post.Id === postId) || (post.id === postId)) {
+        if (post.Id === postId) {
           const currentVote = post.userVote;
           let newUpvotes = post.upvotes;
           let newDownvotes = post.downvotes;
@@ -92,7 +92,7 @@ if ((post.Id === postId) || (post.id === postId)) {
     try {
       // Optimistic update
       setPosts(prev => prev.map(post => {
-if ((post.Id === postId) || (post.id === postId)) {
+        if (post.Id === postId) {
           return { ...post, saved: !post.saved };
         }
         return post;
@@ -100,7 +100,7 @@ if ((post.Id === postId) || (post.id === postId)) {
 
       await postService.toggleSave(postId);
       
-const post = posts.find(p => (p.Id === postId) || (p.id === postId));
+      const post = posts.find(p => p.Id === postId);
       toast.success(post?.saved ? "Post saved!" : "Post unsaved!");
     } catch (err) {
       toast.error("Failed to save post");
@@ -110,7 +110,7 @@ const post = posts.find(p => (p.Id === postId) || (p.id === postId));
   };
 
   useEffect(() => {
-fetchPosts(true);
+    fetchPosts(true);
   }, [filters.sortBy, filters.community]);
 
   return {

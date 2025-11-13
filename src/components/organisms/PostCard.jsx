@@ -1,15 +1,15 @@
 import React from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { cn } from "@/utils/cn";
-import { formatNumber } from "@/utils/formatNumber";
-import { formatTimeAgo } from "@/utils/formatTime";
-import ApperIcon from "@/components/ApperIcon";
-import CommunityPill from "@/components/molecules/CommunityPill";
-import VoteControls from "@/components/molecules/VoteControls";
-import MediaThumbnail from "@/components/molecules/MediaThumbnail";
+import { useNavigate } from "react-router-dom";
+import Card from "@/components/atoms/Card";
 import Avatar from "@/components/atoms/Avatar";
 import Button from "@/components/atoms/Button";
-import Card from "@/components/atoms/Card";
+import VoteControls from "@/components/molecules/VoteControls";
+import MediaThumbnail from "@/components/molecules/MediaThumbnail";
+import CommunityPill from "@/components/molecules/CommunityPill";
+import ApperIcon from "@/components/ApperIcon";
+import { formatTimeAgo } from "@/utils/formatTime";
+import { formatNumber } from "@/utils/formatNumber";
+import { cn } from "@/utils/cn";
 
 const PostCard = ({ 
   post, 
@@ -68,12 +68,13 @@ const PostCard = ({
         <div className="flex-1 min-w-0">
           {/* Header */}
           <div className="flex items-center space-x-2 mb-2">
-<Link 
-              to={`/r/${post.community}`}
-              className="inline-flex items-center px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-xs font-medium text-gray-700 hover:text-gray-900 transition-colors duration-150 cursor-pointer"
-            >
-              r/{post.community}
-            </Link>
+            <CommunityPill 
+              community={{ 
+                name: post.community, 
+                displayName: post.community 
+              }}
+              size="sm"
+            />
             <span className="text-gray-400">•</span>
             <div className="flex items-center space-x-1 text-sm text-gray-500">
               <span>Posted by</span>
