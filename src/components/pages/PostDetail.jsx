@@ -24,9 +24,8 @@ export default function PostDetail() {
     try {
       setLoading(true)
       setError(null)
-      
-      // Validate postId before making API call
-      if (!postId || postId === '' || (typeof postId !== 'number' && !/^\d+$/.test(String(postId)))) {
+// Validate postId before making API call
+      if (!postId || postId === '' || !/^\d+$/.test(String(postId))) {
         throw new Error('Invalid post ID in URL. Please check the link and try again.')
       }
       
@@ -37,7 +36,7 @@ export default function PostDetail() {
       console.error('Error fetching post:', err)
       setError(err.message || 'Failed to load post')
     } finally {
-setLoading(false)
+      setLoading(false)
     }
   };
   const handleVote = async (_, voteType) => {
@@ -214,13 +213,19 @@ setLoading(false)
               </div>
             )}
 
-            {/* Link Preview */}
+{/* Link Preview */}
             {post.contentType === "link" && (
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
                 <div className="flex items-center space-x-2 mb-2">
                   <ApperIcon name="ExternalLink" className="h-4 w-4 text-gray-500" />
                   <span className="text-sm text-gray-600">
-                    {new URL(post.content).hostname}
+                    {(() => {
+                      try {
+                        return new URL(post.content).hostname;
+                      } catch {
+                        return 'Invalid URL';
+                      }
+                    })()}
                   </span>
                 </div>
                 <a
