@@ -26,10 +26,16 @@ const fetchPost = async () => {
       setLoading(true);
       setError("");
       
-      // Validate postId parameter
-      if (!postId || postId.trim() === '' || isNaN(parseInt(postId))) {
-        throw new Error(`Invalid post ID from URL: ${postId}`);
+      // Validate postId parameter from URL
+      if (!postId || (typeof postId === 'string' && postId.trim() === '') || isNaN(parseInt(postId))) {
+        const errorMsg = !postId 
+          ? "No post ID found in URL. Please check the link and try again."
+          : `Invalid post ID from URL: "${postId}". The post ID must be a number.`;
+        setError(errorMsg);
+        setLoading(false);
+        return;
       }
+      
       const response = await postService.getById(postId);
       setPost(response);
     } catch (err) {
@@ -93,8 +99,10 @@ const fetchPost = async () => {
     }
   };
 
-  useEffect(() => {
-    fetchPost();
+useEffect(() => {
+    if (postId) {
+      fetchPost();
+    }
   }, [postId]);
 
   if (loading) {

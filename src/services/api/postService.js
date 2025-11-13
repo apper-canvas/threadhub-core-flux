@@ -124,7 +124,7 @@ async getById(id) {
     
     // Input validation
 if (!id || (typeof id === 'string' && id.trim() === '') || isNaN(parseInt(id))) {
-      throw new Error(`Invalid post ID: ${id}. ID must be a number or numeric string.`);
+      throw new Error(`Invalid post ID: "${id}". Post ID must be a number or numeric string.`);
     }
     
     const parsedId = parseInt(id);
@@ -173,7 +173,7 @@ async vote(id, voteType) {
     
     // Input validation
 if (!id || (typeof id === 'string' && id.trim() === '') || isNaN(parseInt(id))) {
-      throw new Error(`Invalid post ID for voting: ${id}`);
+      throw new Error(`Invalid post ID for voting: "${id}". Post ID must be a number.`);
     }
     
     if (!voteType || !['up', 'down'].includes(voteType)) {
@@ -216,7 +216,7 @@ async toggleSave(id) {
     
     // Input validation
 if (!id || (typeof id === 'string' && id.trim() === '') || isNaN(parseInt(id))) {
-      throw new Error(`Invalid post ID for save toggle: ${id}`);
+      throw new Error(`Invalid post ID for save toggle: "${id}". Post ID must be a number.`);
     }
     
     const parsedId = parseInt(id);
@@ -235,7 +235,7 @@ async delete(id) {
     
     // Input validation
 if (!id || (typeof id === 'string' && id.trim() === '') || isNaN(parseInt(id))) {
-      throw new Error(`Invalid post ID for deletion: ${id}`);
+      throw new Error(`Invalid post ID for deletion: "${id}". Post ID must be a number.`);
     }
     
     const parsedId = parseInt(id);

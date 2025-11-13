@@ -48,7 +48,7 @@ const response = await postService.getAll({
     try {
       // Optimistic update
       setPosts(prev => prev.map(post => {
-        if (post.Id === postId) {
+if ((post.Id === postId) || (post.id === postId)) {
           const currentVote = post.userVote;
           let newUpvotes = post.upvotes;
           let newDownvotes = post.downvotes;
@@ -92,7 +92,7 @@ const response = await postService.getAll({
     try {
       // Optimistic update
       setPosts(prev => prev.map(post => {
-        if (post.Id === postId) {
+if ((post.Id === postId) || (post.id === postId)) {
           return { ...post, saved: !post.saved };
         }
         return post;
@@ -100,7 +100,7 @@ const response = await postService.getAll({
 
       await postService.toggleSave(postId);
       
-      const post = posts.find(p => p.Id === postId);
+const post = posts.find(p => (p.Id === postId) || (p.id === postId));
       toast.success(post?.saved ? "Post saved!" : "Post unsaved!");
     } catch (err) {
       toast.error("Failed to save post");
