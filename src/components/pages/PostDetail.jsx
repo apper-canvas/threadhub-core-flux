@@ -21,11 +21,15 @@ const PostDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const fetchPost = async () => {
+const fetchPost = async () => {
     try {
       setLoading(true);
       setError("");
       
+      // Validate postId parameter
+      if (!postId || postId.trim() === '' || isNaN(parseInt(postId))) {
+        throw new Error(`Invalid post ID from URL: ${postId}`);
+      }
       const response = await postService.getById(postId);
       setPost(response);
     } catch (err) {
