@@ -1,41 +1,44 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import Card from "@/components/atoms/Card";
-import Button from "@/components/atoms/Button";
-import Avatar from "@/components/atoms/Avatar";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { formatNumber } from "@/utils/formatNumber";
+import { formatTimeAgo } from "@/utils/formatTime";
+import postService from "@/services/api/postService";
+import ApperIcon from "@/components/ApperIcon";
+import CommunityPill from "@/components/molecules/CommunityPill";
 import VoteControls from "@/components/molecules/VoteControls";
 import MediaThumbnail from "@/components/molecules/MediaThumbnail";
-import CommunityPill from "@/components/molecules/CommunityPill";
 import Loading from "@/components/ui/Loading";
 import ErrorView from "@/components/ui/ErrorView";
-import ApperIcon from "@/components/ApperIcon";
-import postService from "@/services/api/postService";
-import { formatTimeAgo } from "@/utils/formatTime";
-import { formatNumber } from "@/utils/formatNumber";
-import { toast } from "react-toastify";
-
-const PostDetail = () => {
-  const { communityName, postId } = useParams();
-  const navigate = useNavigate();
-  const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+import Avatar from "@/components/atoms/Avatar";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
+export default function PostDetail() {
+  const { id: postId } = useParams()
+  const navigate = useNavigate()
+  const [post, setPost] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   const fetchPost = async () => {
     try {
-      setLoading(true);
-      setError("");
+      setLoading(true)
+      setError(null)
       
-      const response = await postService.getById(postId);
-      setPost(response);
+      // Validate postId before making API call
+      if (!postId || postId === '' || (typeof postId !== 'number' && !/^\d+$/.test(String(postId)))) {
+        throw new Error('Invalid post ID in URL. Please check the link and try again.')
+      }
+      
+      // Get post data
+      const response = await postService.getById(postId)
+      setPost(response)
     } catch (err) {
-      setError(err.message || "Failed to fetch post");
-      console.error("Error fetching post:", err);
+      console.error('Error fetching post:', err)
+      setError(err.message || 'Failed to load post')
     } finally {
-      setLoading(false);
+setLoading(false)
     }
   };
-
   const handleVote = async (_, voteType) => {
     if (!post) return;
     
@@ -278,5 +281,3 @@ const PostDetail = () => {
     </div>
   );
 };
-
-export default PostDetail;
