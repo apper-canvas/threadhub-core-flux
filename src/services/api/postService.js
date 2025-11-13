@@ -64,17 +64,42 @@ class PostService {
     };
   }
 
-  async getById(id) {
+async getById(id) {
     await delay(200);
-    const post = this.posts.find(p => p.Id === parseInt(id));
-    if (!post) throw new Error("Post not found");
+    
+    // Input validation
+    if (!id || (isNaN(parseInt(id)) && typeof id !== 'string')) {
+      throw new Error(`Invalid post ID: ${id}. ID must be a number or numeric string.`);
+    }
+    
+    const parsedId = parseInt(id);
+    // Handle both Id and id property cases for robust data access
+    const post = this.posts.find(p => (p.Id === parsedId) || (p.id === parsedId));
+    
+    if (!post) {
+      throw new Error(`Post with ID ${parsedId} not found. Available posts: ${this.posts.length}`);
+    }
+    
     return { ...post };
   }
 
-  async create(postData) {
+async create(postData) {
     await delay(400);
+    
+    // Input validation
+    if (!postData || typeof postData !== 'object') {
+      throw new Error("Invalid post data provided");
+    }
+    
+    // Generate new ID handling edge case of empty posts array
+    let newId = 1;
+    if (this.posts.length > 0) {
+      const ids = this.posts.map(p => p.Id || p.id || 0);
+      newId = Math.max(...ids) + 1;
+    }
+    
     const newPost = {
-      Id: Math.max(...this.posts.map(p => p.Id)) + 1,
+      Id: newId,
       ...postData,
       createdAt: new Date().toISOString(),
       upvotes: 1,
@@ -88,10 +113,24 @@ class PostService {
     return { ...newPost };
   }
 
-  async vote(id, voteType) {
+async vote(id, voteType) {
     await delay(150);
-    const postIndex = this.posts.findIndex(p => p.Id === parseInt(id));
-    if (postIndex === -1) throw new Error("Post not found");
+    
+    // Input validation
+    if (!id || (isNaN(parseInt(id)) && typeof id !== 'string')) {
+      throw new Error(`Invalid post ID for voting: ${id}`);
+    }
+    
+    if (!voteType || !['up', 'down'].includes(voteType)) {
+      throw new Error(`Invalid vote type: ${voteType}. Must be 'up' or 'down'`);
+    }
+    
+    const parsedId = parseInt(id);
+    const postIndex = this.posts.findIndex(p => (p.Id === parsedId) || (p.id === parsedId));
+    
+    if (postIndex === -1) {
+      throw new Error(`Cannot vote: Post with ID ${parsedId} not found`);
+    }
     
     const post = this.posts[postIndex];
     const currentVote = post.userVote;
@@ -117,19 +156,39 @@ class PostService {
     return { ...post };
   }
 
-  async toggleSave(id) {
+async toggleSave(id) {
     await delay(200);
-    const postIndex = this.posts.findIndex(p => p.Id === parseInt(id));
-    if (postIndex === -1) throw new Error("Post not found");
+    
+    // Input validation
+    if (!id || (isNaN(parseInt(id)) && typeof id !== 'string')) {
+      throw new Error(`Invalid post ID for save toggle: ${id}`);
+    }
+    
+    const parsedId = parseInt(id);
+    const postIndex = this.posts.findIndex(p => (p.Id === parsedId) || (p.id === parsedId));
+    
+    if (postIndex === -1) {
+      throw new Error(`Cannot toggle save: Post with ID ${parsedId} not found`);
+    }
     
     this.posts[postIndex].saved = !this.posts[postIndex].saved;
     return { ...this.posts[postIndex] };
   }
 
-  async delete(id) {
+async delete(id) {
     await delay(250);
-    const postIndex = this.posts.findIndex(p => p.Id === parseInt(id));
-    if (postIndex === -1) throw new Error("Post not found");
+    
+    // Input validation
+    if (!id || (isNaN(parseInt(id)) && typeof id !== 'string')) {
+      throw new Error(`Invalid post ID for deletion: ${id}`);
+    }
+    
+    const parsedId = parseInt(id);
+    const postIndex = this.posts.findIndex(p => (p.Id === parsedId) || (p.id === parsedId));
+    
+    if (postIndex === -1) {
+      throw new Error(`Cannot delete: Post with ID ${parsedId} not found`);
+    }
     
     const deletedPost = this.posts.splice(postIndex, 1)[0];
     return { ...deletedPost };
