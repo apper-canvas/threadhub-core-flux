@@ -15,7 +15,7 @@ export const usePosts = (filters = {}) => {
       setError("");
       
       const currentPage = resetPage ? 1 : page;
-      const response = await postService.getAll({
+const response = await postService.getAll({
         ...filters,
         page: currentPage,
         limit: 10
@@ -110,7 +110,7 @@ export const usePosts = (filters = {}) => {
   };
 
   useEffect(() => {
-    fetchPosts(true);
+fetchPosts(true);
   }, [filters.sortBy, filters.community]);
 
   return {

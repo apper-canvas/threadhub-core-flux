@@ -8,7 +8,7 @@ class PostService {
     this.posts = [...mockPosts];
   }
 
-  async getAll(filters = {}) {
+async getAll(filters = {}) {
     await delay(300);
     
     let filteredPosts = [...this.posts];
@@ -19,19 +19,71 @@ class PostService {
         post.community.toLowerCase() === filters.community.toLowerCase()
       );
     }
+
+    // Filter by post type
+    if (filters.postType && filters.postType !== "all") {
+      switch (filters.postType) {
+        case "image":
+          filteredPosts = filteredPosts.filter(post => 
+            post.type === "image" || (post.media && post.media.some(m => m.type === "image"))
+          );
+          break;
+        case "video":
+          filteredPosts = filteredPosts.filter(post => 
+            post.type === "video" || (post.media && post.media.some(m => m.type === "video"))
+          );
+          break;
+        case "link":
+          filteredPosts = filteredPosts.filter(post => 
+            post.type === "link" || post.url
+          );
+          break;
+        case "discussion":
+          filteredPosts = filteredPosts.filter(post => 
+            post.type === "text" || (!post.url && !post.media)
+          );
+          break;
+      }
+    }
     
-    // Filter by sort type
+    // Separate pinned posts
+    const pinnedPosts = filteredPosts.filter(post => post.isPinned);
+    const regularPosts = filteredPosts.filter(post => !post.isPinned);
+    
+    // Sort regular posts by sort type
     if (filters.sortBy) {
       switch (filters.sortBy) {
         case "new":
-          filteredPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          regularPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
           break;
         case "top":
-          filteredPosts.sort((a, b) => (b.upvotes - b.downvotes) - (a.upvotes - a.downvotes));
+          regularPosts.sort((a, b) => (b.upvotes - b.downvotes) - (a.upvotes - a.downvotes));
+          break;
+        case "topWeek":
+          // Filter posts from this week and sort by votes
+          const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+          const thisWeekPosts = regularPosts.filter(post => new Date(post.createdAt) > oneWeekAgo);
+          thisWeekPosts.sort((a, b) => (b.upvotes - b.downvotes) - (a.upvotes - a.downvotes));
+          regularPosts.length = 0;
+          regularPosts.push(...thisWeekPosts);
+          break;
+        case "controversial":
+          // Sort by posts with high engagement but close vote ratios
+          regularPosts.sort((a, b) => {
+            const aRatio = a.upvotes / Math.max(1, a.downvotes);
+            const bRatio = b.upvotes / Math.max(1, b.downvotes);
+            const aEngagement = a.upvotes + a.downvotes + a.commentCount;
+            const bEngagement = b.upvotes + b.downvotes + b.commentCount;
+            
+            // Controversial score: high engagement with ratio close to 1
+            const aScore = aEngagement / (Math.abs(aRatio - 1) + 1);
+            const bScore = bEngagement / (Math.abs(bRatio - 1) + 1);
+            return bScore - aScore;
+          });
           break;
         case "rising":
           // Simple rising algorithm: recent posts with good vote ratio
-          filteredPosts.sort((a, b) => {
+          regularPosts.sort((a, b) => {
             const aScore = (a.upvotes - a.downvotes) * (1 / (Date.now() - new Date(a.createdAt).getTime()));
             const bScore = (b.upvotes - b.downvotes) * (1 / (Date.now() - new Date(b.createdAt).getTime()));
             return bScore - aScore;
@@ -40,13 +92,16 @@ class PostService {
         case "hot":
         default:
           // Hot algorithm: combination of votes and time
-          filteredPosts.sort((a, b) => {
+          regularPosts.sort((a, b) => {
             const aHot = Math.log(Math.max(1, a.upvotes - a.downvotes)) / Math.pow((Date.now() - new Date(a.createdAt).getTime()) / 3600000 + 2, 1.5);
             const bHot = Math.log(Math.max(1, b.upvotes - b.downvotes)) / Math.pow((Date.now() - new Date(b.createdAt).getTime()) / 3600000 + 2, 1.5);
             return bHot - aHot;
           });
       }
     }
+
+    // Combine pinned posts first, then regular posts
+    const sortedPosts = [...pinnedPosts, ...regularPosts];
     
     // Pagination
     const page = filters.page || 1;
@@ -54,13 +109,13 @@ class PostService {
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
     
-    const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
-    const hasMore = endIndex < filteredPosts.length;
+    const paginatedPosts = sortedPosts.slice(startIndex, endIndex);
+    const hasMore = endIndex < sortedPosts.length;
     
     return {
       posts: paginatedPosts.map(post => ({ ...post })),
       hasMore,
-      total: filteredPosts.length
+      total: sortedPosts.length
     };
   }
 
