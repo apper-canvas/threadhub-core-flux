@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { formatNumber } from "@/utils/formatNumber";
 import { formatTimeAgo } from "@/utils/formatTime";
 import postService from "@/services/api/postService";
