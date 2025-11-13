@@ -109,9 +109,9 @@ export const usePosts = (filters = {}) => {
     }
   };
 
-  useEffect(() => {
+useEffect(() => {
     fetchPosts(true);
-  }, [filters.sortBy, filters.community]);
+  }, [filters.sortBy, filters.community, filters.communityName]);
 
   return {
     posts,
