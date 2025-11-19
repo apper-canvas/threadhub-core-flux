@@ -67,9 +67,9 @@ class PostService {
 async getById(id) {
     await delay(200);
     
-// Input validation
-    if (!id || id === '' || (typeof id !== 'number' && !/^\d+$/.test(String(id)))) {
-      throw new Error(`Invalid post ID: ${id}. ID must be a positive integer or numeric string.`);
+    // Input validation
+    if (!id || (isNaN(parseInt(id)) && typeof id !== 'string')) {
+      throw new Error(`Invalid post ID: ${id}. ID must be a number or numeric string.`);
     }
     
     const parsedId = parseInt(id);
@@ -116,10 +116,11 @@ async create(postData) {
 async vote(id, voteType) {
     await delay(150);
     
-// Input validation
-    if (!id || id === '' || (typeof id !== 'number' && !/^\d+$/.test(String(id)))) {
-      throw new Error(`Invalid post ID for voting: ${id}. Must be a positive integer or numeric string.`);
+    // Input validation
+    if (!id || (isNaN(parseInt(id)) && typeof id !== 'string')) {
+      throw new Error(`Invalid post ID for voting: ${id}`);
     }
+    
     if (!voteType || !['up', 'down'].includes(voteType)) {
       throw new Error(`Invalid vote type: ${voteType}. Must be 'up' or 'down'`);
     }
@@ -158,10 +159,11 @@ async vote(id, voteType) {
 async toggleSave(id) {
     await delay(200);
     
-// Input validation
-    if (!id || id === '' || (typeof id !== 'number' && !/^\d+$/.test(String(id)))) {
-      throw new Error(`Invalid post ID for save toggle: ${id}. Must be a positive integer or numeric string.`);
+    // Input validation
+    if (!id || (isNaN(parseInt(id)) && typeof id !== 'string')) {
+      throw new Error(`Invalid post ID for save toggle: ${id}`);
     }
+    
     const parsedId = parseInt(id);
     const postIndex = this.posts.findIndex(p => (p.Id === parsedId) || (p.id === parsedId));
     
@@ -176,10 +178,11 @@ async toggleSave(id) {
 async delete(id) {
     await delay(250);
     
-// Input validation
-    if (!id || id === '' || (typeof id !== 'number' && !/^\d+$/.test(String(id)))) {
-      throw new Error(`Invalid post ID for deletion: ${id}. Must be a positive integer or numeric string.`);
+    // Input validation
+    if (!id || (isNaN(parseInt(id)) && typeof id !== 'string')) {
+      throw new Error(`Invalid post ID for deletion: ${id}`);
     }
+    
     const parsedId = parseInt(id);
     const postIndex = this.posts.findIndex(p => (p.Id === parsedId) || (p.id === parsedId));
     

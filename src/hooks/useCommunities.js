@@ -5,24 +5,9 @@ import { toast } from "react-toastify";
 export const useCommunities = () => {
   const [communities, setCommunities] = useState([]);
   const [popularCommunities, setPopularCommunities] = useState([]);
-  const [currentCommunity, setCurrentCommunity] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const fetchCommunity = async (communityName) => {
-    try {
-      setLoading(true);
-      setError("");
-      
-      const response = await communityService.getByName(communityName);
-      setCurrentCommunity(response);
-    } catch (err) {
-      setError(err.message || "Failed to fetch community");
-      console.error("Error fetching community:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
   const fetchPopularCommunities = async () => {
     try {
       setLoading(true);
@@ -73,14 +58,12 @@ export const useCommunities = () => {
     fetchPopularCommunities();
   }, []);
 
-return {
+  return {
     communities,
     popularCommunities,
-    currentCommunity,
     loading,
     error,
     handleJoinCommunity,
-    fetchCommunity,
     refetch: fetchPopularCommunities
   };
 };

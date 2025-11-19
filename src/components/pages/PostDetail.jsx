@@ -1,44 +1,41 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import { formatNumber } from "@/utils/formatNumber";
-import { formatTimeAgo } from "@/utils/formatTime";
-import postService from "@/services/api/postService";
-import ApperIcon from "@/components/ApperIcon";
-import CommunityPill from "@/components/molecules/CommunityPill";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import Card from "@/components/atoms/Card";
+import Button from "@/components/atoms/Button";
+import Avatar from "@/components/atoms/Avatar";
 import VoteControls from "@/components/molecules/VoteControls";
 import MediaThumbnail from "@/components/molecules/MediaThumbnail";
+import CommunityPill from "@/components/molecules/CommunityPill";
 import Loading from "@/components/ui/Loading";
 import ErrorView from "@/components/ui/ErrorView";
-import Avatar from "@/components/atoms/Avatar";
-import Button from "@/components/atoms/Button";
-import Card from "@/components/atoms/Card";
-export default function PostDetail() {
-  const { id: postId } = useParams()
-  const navigate = useNavigate()
-  const [post, setPost] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+import ApperIcon from "@/components/ApperIcon";
+import postService from "@/services/api/postService";
+import { formatTimeAgo } from "@/utils/formatTime";
+import { formatNumber } from "@/utils/formatNumber";
+import { toast } from "react-toastify";
 
-const fetchPost = useCallback(async () => {
+const PostDetail = () => {
+  const { communityName, postId } = useParams();
+  const navigate = useNavigate();
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const fetchPost = async () => {
     try {
-      setLoading(true)
-      setError(null)
-      // Validate postId before making API call
-      if (!postId || postId === '' || !/^\d+$/.test(String(postId))) {
-        throw new Error('Invalid post ID in URL. Please check the link and try again.')
-      }
+      setLoading(true);
+      setError("");
       
-      // Get post data
-      const response = await postService.getById(postId)
-      setPost(response)
+      const response = await postService.getById(postId);
+      setPost(response);
     } catch (err) {
-      console.error('Error fetching post:', err)
-      setError(err.message || 'Failed to load post')
+      setError(err.message || "Failed to fetch post");
+      console.error("Error fetching post:", err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [postId]);
+  };
+
   const handleVote = async (_, voteType) => {
     if (!post) return;
     
@@ -92,9 +89,9 @@ const fetchPost = useCallback(async () => {
     }
   };
 
-useEffect(() => {
+  useEffect(() => {
     fetchPost();
-  }, [fetchPost]);
+  }, [postId]);
 
   if (loading) {
     return <Loading count={1} />;
@@ -213,19 +210,13 @@ useEffect(() => {
               </div>
             )}
 
-{/* Link Preview */}
+            {/* Link Preview */}
             {post.contentType === "link" && (
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
                 <div className="flex items-center space-x-2 mb-2">
                   <ApperIcon name="ExternalLink" className="h-4 w-4 text-gray-500" />
                   <span className="text-sm text-gray-600">
-                    {(() => {
-                      try {
-                        return new URL(post.content).hostname;
-                      } catch {
-                        return 'Invalid URL';
-                      }
-                    })()}
+                    {new URL(post.content).hostname}
                   </span>
                 </div>
                 <a
@@ -287,3 +278,5 @@ useEffect(() => {
     </div>
   );
 };
+
+export default PostDetail;
